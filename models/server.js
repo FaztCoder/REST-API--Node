@@ -1,18 +1,26 @@
 const express = require('express');
 const cors = require('cors');
+const { dbConnection } = require('../database/config');
 
 class Server {
 
   constructor() {
-    this.app = express()
+    this.app = express();
     this.port = process.env.PORT
-    this.pathUsers = '/api/users';
+    this.pathUsuarios = '/api/usuarios';
+
+    //Conexión a la base de datos
+    this.conectarDB();
 
     //Middleware
     this.middleware();
 
     //Rutas de la aplicación
     this.routes();
+  }
+
+  async conectarDB () {
+    await dbConnection();
   }
 
   middleware () {
@@ -28,7 +36,7 @@ class Server {
   }
   //TODO: se tiene que mover las rutas a un archivo independiente
   routes () {
-    this.app.use(this.pathUsers, require('../routes/user.routes'));
+    this.app.use(this.pathUsuarios, require('../routes/usuarios.routes'));
   }
   listen () {
     this.app.listen(this.port, () => {
